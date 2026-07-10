@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explorador de Sumas de Riemann</title>
+    <meta name="description" content="Plataforma interactiva profesional para el estudio y análisis de las Sumas de Riemann. Incluye simulador visual, teoría completa y desafíos didácticos progresivos.">
+
+    <!-- Fuentes -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Estilos -->
+    <link rel="stylesheet" href="estilos.css?v=2.0">
+
+    <!-- Librerías Externas -->
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/12.4.0/math.min.js"></script>
+    <script defer src="https://unpkg.com/mathlive"></script>
+    <!-- Favicon -->
+    <link rel="icon" type="image/jpg" href="logo.jpg">
+</head>
+<body>
+
+    <!-- ==================== HERO HEADER ==================== -->
+    <header class="hero-header">
+        <!-- Elementos matemáticos flotantes decorativos -->
+        <div class="floating-symbols" aria-hidden="true">
+            <span class="float-symbol s1">∫</span>
+            <span class="float-symbol s2">Σ</span>
+            <span class="float-symbol s3">Δx</span>
+            <span class="float-symbol s4">π</span>
+            <span class="float-symbol s5">∞</span>
+            <span class="float-symbol s6">dx</span>
+            <span class="float-symbol s7">lim</span>
+            <span class="float-symbol s8">f(x)</span>
+        </div>
+
+        <!-- Orbes de luz decorativos -->
+        <div class="hero-orb orb-1"></div>
+        <div class="hero-orb orb-2"></div>
+        <div class="hero-orb orb-3"></div>
+
+        <div class="hero-layout">
+            <div class="hero-robot">
+                <svg viewBox="0 0 200 280" fill="none" xmlns="http://www.w3.org/2000/svg" class="robot-svg">
+                    <!-- Antena -->
+                    <circle cx="100" cy="18" r="8" fill="#818cf8" class="robot-antenna-tip"/>
+                    <rect x="97" y="24" width="6" height="20" rx="3" fill="#a5b4fc"/>
+                    
+                    <!-- Cabeza -->
+                    <rect x="45" y="42" width="110" height="80" rx="28" fill="white"/>
+                    <rect x="45" y="42" width="110" height="80" rx="28" fill="url(#headGrad)" opacity="0.15"/>
+                    
+                    <!-- Ojos -->
+                    <ellipse cx="75" cy="78" rx="14" ry="15" fill="#eef2ff"/>
+                    <ellipse cx="125" cy="78" rx="14" ry="15" fill="#eef2ff"/>
+                    <circle cx="75" cy="80" r="8" fill="#6366f1"/>
+                    <circle cx="125" cy="80" r="8" fill="#6366f1"/>
+                    <circle cx="78" cy="77" r="3" fill="white"/>
+                    <circle cx="128" cy="77" r="3" fill="white"/>
+                    
+                    <!-- Sonrisa -->
+                    <path d="M82 96 Q100 110 118 96" stroke="#6366f1" stroke-width="3" stroke-linecap="round" fill="none"/>
+                    
+                    <!-- Orejas -->
+                    <rect x="30" y="65" width="18" height="30" rx="9" fill="#c7d2fe"/>
+                    <rect x="152" y="65" width="18" height="30" rx="9" fill="#c7d2fe"/>
+                    
+                    <!-- Cuello -->
+                    <rect x="88" y="120" width="24" height="14" rx="4" fill="#e0e7ff"/>
+                    
+                    <!-- Cuerpo -->
+                    <rect x="50" y="132" width="100" height="90" rx="22" fill="white"/>
+                    <rect x="50" y="132" width="100" height="90" rx="22" fill="url(#bodyGrad)" opacity="0.1"/>
+                    
+                    <!-- Panel del pecho con símbolo integral -->
+                    <rect x="70" y="150" width="60" height="45" rx="12" fill="#eef2ff" stroke="#c7d2fe" stroke-width="1.5"/>
+                    <text x="100" y="185" text-anchor="middle" font-size="32" font-family="serif" font-style="italic" fill="#6366f1" font-weight="700">∫</text>
+                    
+                    <!-- Brazos -->
+                    <rect x="22" y="140" width="30" height="60" rx="15" fill="white"/>
+                    <rect x="22" y="140" width="30" height="60" rx="15" fill="url(#bodyGrad)" opacity="0.08"/>
+                    <circle cx="37" cy="205" r="12" fill="#e0e7ff"/>
+                    
+                    <rect x="148" y="140" width="30" height="60" rx="15" fill="white"/>
+                    <rect x="148" y="140" width="30" height="60" rx="15" fill="url(#bodyGrad)" opacity="0.08"/>
+                    <circle cx="163" cy="205" r="12" fill="#e0e7ff"/>
+                    
+                    <!-- Piernas -->
+                    <rect x="68" y="218" width="24" height="36" rx="12" fill="#e0e7ff"/>
+                    <rect x="108" y="218" width="24" height="36" rx="12" fill="#e0e7ff"/>
+                    
+                    <!-- Pies -->
+                    <ellipse cx="80" cy="258" rx="18" ry="10" fill="#c7d2fe"/>
+                    <ellipse cx="120" cy="258" rx="18" ry="10" fill="#c7d2fe"/>
+                    
+                    <!-- Gradientes -->
+                    <defs>
+                        <linearGradient id="headGrad" x1="45" y1="42" x2="155" y2="122">
+                            <stop offset="0%" stop-color="#6366f1"/>
+                            <stop offset="100%" stop-color="#8b5cf6"/>
+                        </linearGradient>
+                        <linearGradient id="bodyGrad" x1="50" y1="132" x2="150" y2="222">
+                            <stop offset="0%" stop-color="#6366f1"/>
+                            <stop offset="100%" stop-color="#8b5cf6"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+            </div>
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    <span class="title-line">Explorador</span>
+                    <span class="title-line title-accent">Riemann</span>
+                </h1>
+                <p class="hero-desc">Domina las Sumas de Riemann y la integral definida con simulaciones interactivas, teoría visual y desafíos progresivos.</p>
+            </div>
+        </div>
+
+        <!-- Navegación por pestañas integrada -->
+        <nav class="hero-tabs">
+            <div class="tabs-pill-container">
+                <button class="tab-btn active" data-tab="teoria" onclick="abrirPestana(event, 'teoria')">
+                    <i class="fa-solid fa-book-open"></i>
+                    <span>Contenido Teórico</span>
+                </button>
+                <button class="tab-btn" data-tab="simulador" onclick="abrirPestana(event, 'simulador')">
+                    <i class="fa-solid fa-chart-area"></i>
+                    <span>Simulador</span>
+                </button>
+                <button class="tab-btn" data-tab="desafio" onclick="abrirPestana(event, 'desafio')">
+                    <i class="fa-solid fa-trophy"></i>
+                    <span>Desafío</span>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+
+    <!-- ==================== CONTENIDO PRINCIPAL ==================== -->
+    <main class="main-content">
+
+        <!-- ============ PESTAÑA 1: CONTENIDO TEÓRICO ============ -->
+        <section id="teoria" class="tab-content active">
+            <div class="teoria-container">
+
+                <!-- Hero compacto -->
+                <div class="teoria-hero">
+                    <div class="hero-icon">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                    </div>
+                    <div class="teoria-hero-text">
+                        <h1>El Arte de la Aproximación</h1>
+                        <p class="hero-subtitle">Descubre cómo aproximar áreas complejas dividiéndolas en rectángulos y cómo el límite nos conduce a la integral definida exacta.</p>
+                    </div>
+                </div>
+
+                <!-- Introducción y Diagrama -->
+                <div class="content-card">
+                    <div class="card-header">
+                        <div class="card-icon blue"><i class="fa-solid fa-compass"></i></div>
+                        <h2>Concepto Fundamental</h2>
+                    </div>
+                    <p>Una suma de Riemann es una aproximación del área total bajo una curva matemática. Se logra dividiendo el intervalo de integración \([a, b]\) en \(n\) rectángulos individuales. Al sumar las áreas de todos estos rectángulos, obtenemos una aproximación numérica del área real.</p>
+                    
+                    <div class="diagrama-svg-container">
+                        <svg viewBox="0 25 600 420" fill="none" xmlns="http://www.w3.org/2000/svg" class="diagrama-svg">
+                                <!-- Cuadrícula sutil completa y definida -->
+                                <line x1="120" y1="60" x2="516" y2="60" stroke="#cbd5e1" stroke-width="1.5"/>
+                                <line x1="120" y1="120" x2="516" y2="120" stroke="#cbd5e1" stroke-width="1.5"/>
+                                <line x1="120" y1="180" x2="516" y2="180" stroke="#cbd5e1" stroke-width="1.5"/>
+                                <line x1="120" y1="240" x2="516" y2="240" stroke="#cbd5e1" stroke-width="1.5"/>
+                                <line x1="120" y1="300" x2="516" y2="300" stroke="#cbd5e1" stroke-width="1.5"/>
+                                
+                                <line x1="186" y1="60" x2="186" y2="360" stroke="#cbd5e1" stroke-width="1.5"/>
+                                <line x1="252" y1="60" x2="252" y2="360" stroke="#cbd5e1" stroke-width="1.5"/>
+                                <line x1="318" y1="60" x2="318" y2="360" stroke="#cbd5e1" stroke-width="1.5"/>
+                                <line x1="384" y1="60" x2="384" y2="360" stroke="#cbd5e1" stroke-width="1.5"/>
+                                <line x1="450" y1="60" x2="450" y2="360" stroke="#cbd5e1" stroke-width="1.5"/>
+                                <line x1="516" y1="60" x2="516" y2="360" stroke="#cbd5e1" stroke-width="1.5"/>
+                                
+                                <!-- Rectángulos de Riemann con esquinas redondeadas -->
+                                <rect x="120" y="345" width="66" height="15" rx="4" fill="url(#rectGrad)" opacity="0.6" stroke="#8b5cf6" stroke-width="1"/>
+                                <rect x="186" y="328" width="66" height="32" rx="4" fill="url(#rectGrad)" opacity="0.6" stroke="#8b5cf6" stroke-width="1"/>
+                                <!-- 3er Rectángulo resaltado -->
+                                <rect x="252" y="298" width="66" height="62" rx="4" fill="#e9d5ff" stroke="#8b5cf6" stroke-width="2"/>
+                                <rect x="318" y="252" width="66" height="108" rx="4" fill="url(#rectGrad)" opacity="0.6" stroke="#8b5cf6" stroke-width="1"/>
+                                <rect x="384" y="190" width="66" height="170" rx="4" fill="url(#rectGrad)" opacity="0.6" stroke="#8b5cf6" stroke-width="1"/>
+                                <rect x="450" y="108" width="66" height="252" rx="4" fill="url(#rectGrad)" opacity="0.6" stroke="#8b5cf6" stroke-width="1"/>
+                                
+                                <!-- Curva y=x² (más oscura y gruesa) -->
+                                <path d="M120 360 Q165 355 200 340 Q240 320 285 290 Q330 252 375 195 Q420 125 516 68" stroke="#1e1b4b" stroke-width="4" fill="none" stroke-linecap="round"/>
+                                
+                                <!-- Eje X -->
+                                <line x1="100" y1="360" x2="540" y2="360" stroke="#1e1b4b" stroke-width="3"/>
+                                <polygon points="540,360 530,354 530,366" fill="#1e1b4b"/>
+                                
+                                <!-- Eje Y -->
+                                <line x1="120" y1="380" x2="120" y2="40" stroke="#1e1b4b" stroke-width="3"/>
+                                <polygon points="120,40 114,50 126,50" fill="#1e1b4b"/>
+                                
+                                <!-- Etiqueta de la curva -->
+                                <text x="525" y="85" font-family="math, 'Cambria Math', 'Times New Roman', serif" font-size="24" font-style="italic" fill="#1e1b4b">
+                                    y = x<tspan baseline-shift="super" font-size="16">2</tspan>
+                                </text>
+                                
+                                <!-- Etiquetas a y b -->
+                                <text x="135" y="390" font-family="math, 'Cambria Math', 'Times New Roman', serif" font-size="24" font-style="italic" fill="#1e1b4b">a</text>
+                                <text x="500" y="390" font-family="math, 'Cambria Math', 'Times New Roman', serif" font-size="24" font-style="italic" fill="#1e1b4b">b</text>
+                                
+                                <!-- Δx bajo el 3er rectángulo con flechas -->
+                                <line x1="252" y1="385" x2="318" y2="385" stroke="#4c1d95" stroke-width="2"/>
+                                <polygon points="252,385 258,381 258,389" fill="#4c1d95"/>
+                                <polygon points="318,385 312,381 312,389" fill="#4c1d95"/>
+                                <text x="285" y="415" font-family="math, 'Cambria Math', 'Times New Roman', serif" font-size="22" font-style="italic" text-anchor="middle" fill="#4c1d95">Δx</text>
+                                
+                                <!-- f(xᵢ) dentro del 3er rectángulo con flecha vertical -->
+                                <line x1="285" y1="300" x2="285" y2="358" stroke="#4c1d95" stroke-width="2"/>
+                                <polygon points="285,300 281,308 289,308" fill="#4c1d95"/>
+                                <polygon points="285,358 281,350 289,350" fill="#4c1d95"/>
+                                <text x="305" y="335" font-family="math, 'Cambria Math', 'Times New Roman', serif" font-size="22" fill="#1e1b4b">
+                                    <tspan font-style="italic">f(x</tspan><tspan baseline-shift="sub" font-size="14" font-style="italic">i</tspan><tspan font-style="italic" dx="2">)</tspan>
+                                </text>
+                            
+                            <!-- Gradiente de los rectángulos -->
+                            <defs>
+                                <linearGradient id="rectGrad" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0%" stop-color="#818cf8"/>
+                                    <stop offset="100%" stop-color="#c4b5fd"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+
+                        <!-- Leyendas (Píldoras) inferiores HTML -->
+                        <div class="leyenda-diagrama">
+                            <div class="leyenda-item">
+                                <div class="leyenda-icon"><i class="fa-solid fa-ruler-horizontal"></i></div>
+                                <span><strong>Δx</strong> es el ancho de<br>cada rectángulo</span>
+                            </div>
+                            <div class="leyenda-item">
+                                <div class="leyenda-icon"><i class="fa-solid fa-ruler-vertical"></i></div>
+                                <span><strong>f(xᵢ)</strong> es la altura del<br>i-ésimo rectángulo</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Los Componentes de la Suma -->
+                <div class="content-card">
+                    <div class="card-header">
+                        <div class="card-icon purple"><i class="fa-solid fa-calculator"></i></div>
+                        <h2>Fórmula General Explicada</h2>
+                    </div>
+                    <p>La fórmula formal de una suma de Riemann expresa de manera exacta cómo calculamos y sumamos estas áreas individuales:</p>
+
+                    <div class="formula-box">
+                        \[ S_n = \sum_{i=1}^{n} f(x_i) \cdot \Delta x \]
+                    </div>
+
+                    <div class="formula-explanations">
+                        <div class="formula-explain-card">
+                            <div class="symbol-badge">\( \Delta x \)</div>
+                            <div>
+                                <strong>El Ancho (Base):</strong> Representa el ancho uniforme de cada uno de los rectángulos. Se calcula dividiendo la longitud total del intervalo entre el número de rectángulos:
+                                \[ \Delta x = \frac{b - a}{n} \]
+                            </div>
+                        </div>
+                        <div class="formula-explain-card">
+                            <div class="symbol-badge">\( f(x_i) \)</div>
+                            <div>
+                                <strong>La Altura:</strong> Es la función evaluada en un punto de muestra dentro de cada subintervalo. Este punto determina la altura de la parte superior del rectángulo.
+                            </div>
+                        </div>
+                        <div class="formula-explain-card">
+                            <div class="symbol-badge">\( \sum \)</div>
+                            <div>
+                                <strong>Sumatoria (Sigma):</strong> Nos indica que debemos sumar las áreas (base \(\times\) altura) de todos los \(n\) rectángulos, desde el primero (\(i = 1\)) hasta el último (\(n\)).
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Estrategia de los rectángulos -->
+                <div class="content-card">
+                    <div class="card-header">
+                        <div class="card-icon orange"><i class="fa-solid fa-layer-group"></i></div>
+                        <h2>Métodos de Selección de Alturas</h2>
+                    </div>
+                    <p>Dependiendo de en qué posición del subintervalo seleccionemos el punto de muestra \(x_i\), obtendremos diferentes estimaciones de altura:</p>
+
+                    <div class="methods-grid">
+                        <div class="method-card left-method">
+                            <div class="method-icon"><i class="fa-solid fa-align-left"></i></div>
+                            <h3>Extremo Izquierdo</h3>
+                            <p>Evaluamos en el extremo izquierdo: \(x_i = a + (i-1)\Delta x\). En funciones crecientes, este método subestima el área total.</p>
+                        </div>
+                        <div class="method-card right-method">
+                            <div class="method-icon"><i class="fa-solid fa-align-right"></i></div>
+                            <h3>Extremo Derecho</h3>
+                            <p>Evaluamos en el extremo derecho: \(x_i = a + i\Delta x\). En funciones crecientes, este método sobreestima el área total.</p>
+                        </div>
+                        <div class="method-card mid-method">
+                            <div class="method-icon"><i class="fa-solid fa-align-center"></i></div>
+                            <h3>Punto Medio</h3>
+                            <p>Evaluamos en el centro exacto del subintervalo. Es el más equilibrado ya que el error sobrante compensa el faltante.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ejemplo Paso a Paso -->
+                <div class="content-card">
+                    <div class="card-header">
+                        <div class="card-icon green"><i class="fa-solid fa-list-ol"></i></div>
+                        <h2>Ejemplo Paso a Paso</h2>
+                    </div>
+                    <p>Calculemos la suma de Riemann para \( f(x) = x^2 \) en el intervalo \([0, 2]\) usando \( n = 2 \) rectángulos y el método del <strong>extremo izquierdo</strong>:</p>
+                    
+                    <ul class="step-list">
+                        <li class="step-item">
+                            <span class="step-number">1</span>
+                            <div>
+                                <strong>Calcular el ancho (\(\Delta x\)):</strong>
+                                \[ \Delta x = \frac{2 - 0}{2} = 1 \]
+                            </div>
+                        </li>
+                        <li class="step-item">
+                            <span class="step-number">2</span>
+                            <div>
+                                <strong>Determinar los puntos de evaluación:</strong>
+                                Dividimos el intervalo en \([0, 1]\) y \([1, 2]\). Al usar el extremo izquierdo, los puntos son:
+                                \[ x_1 = 0 \quad y \quad x_2 = 1 \]
+                            </div>
+                        </li>
+                        <li class="step-item">
+                            <span class="step-number">3</span>
+                            <div>
+                                <strong>Evaluar alturas y calcular suma:</strong>
+                                \[ S_2 = f(x_1)\Delta x + f(x_2)\Delta x = f(0)\cdot 1 + f(1)\cdot 1 = 0^2\cdot 1 + 1^2\cdot 1 = 1 \]
+                                El área aproximada resultante es de <strong>1 u²</strong>.
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Hacia la Integral Definida -->
+                <div class="content-card">
+                    <div class="card-header">
+                        <div class="card-icon rose"><i class="fa-solid fa-infinity"></i></div>
+                        <h2>El Límite Infinito e Integral Definida</h2>
+                    </div>
+                    <p>Cuando el número de rectángulos tiende al infinito (\(n \to \infty\)), el ancho de cada rectángulo se reduce a cero, eliminando cualquier error de aproximación. En ese instante, la Suma de Riemann se convierte exactamente en la <strong>integral definida</strong>:</p>
+
+                    <div class="formula-box">
+                        \[ \int_{a}^{b} f(x)\,dx = \lim_{n \to \infty} \sum_{i=1}^{n} f(x_i) \cdot \Delta x \]
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ============ PESTAÑA 2: SIMULADOR INTERACTIVO ============ -->
+        <section id="simulador" class="tab-content">
+            <div class="simulator-layout">
+
+                <!-- Panel de controles -->
+                <aside class="controls-panel">
+                    
+                    <!-- Selector de Modo de Simulador -->
+                    <div class="game-mode-selector" style="margin-bottom: 20px;">
+                        <button class="game-mode-btn active" id="btnSimuladorDidactico" onclick="cambiarModoSimulador('didactico')">
+                            <i class="fa-solid fa-graduation-cap"></i>
+                            <span>Didáctico</span>
+                        </button>
+                        <button class="game-mode-btn" id="btnSimuladorLibre" onclick="cambiarModoSimulador('libre')">
+                            <i class="fa-solid fa-keyboard"></i>
+                            <span>Libre</span>
+                        </button>
+                    </div>
+
+                    <!-- Contenedor Didáctico: Lista de Casos -->
+                    <div class="panel-section" id="contenedorFuncionDidactica">
+                        <label class="panel-label">
+                            <i class="fa-solid fa-square-root-variable"></i> Caso de Estudio
+                        </label>
+                        <select id="funcion" class="control-select">
+                            <option value="lineal">Lineal: f(x) = x + 2</option>
+                            <option value="cuadratica">Cuadrática: f(x) = x²</option>
+                            <option value="cubica">Cúbica: f(x) = x³</option>
+                            <option value="raiz">Raíz Cuadrada: f(x) = √x</option>
+                            <option value="exponencial">Exponencial: f(x) = eˣ</option>
+                            <option value="trigonometrica">Trigonométrica: f(x) = sen(x) + 2</option>
+                            <option value="gaussiana">Campana de Gauss: f(x) = e^(-x²)</option>
+                            <option value="absoluto">Valor Absoluto: f(x) = |x|</option>
+                        </select>
+                    </div>
+
+                    <!-- Contenedor Libre: Editor de Fórmulas -->
+                    <div class="panel-section" id="contenedorFuncionLibre" style="display: none;">
+                        <label class="panel-label">
+                            <i class="fa-solid fa-square-root-variable"></i> Función Libre f(x)
+                        </label>
+                        <math-field id="formulaInput" class="control-input" style="font-size: 16px; padding: 8px;">x^2+2</math-field>
+                        <p style="font-size: 11px; color: var(--text-muted); margin-top: 6px;">Usa el teclado virtual o escribe (ej. sin(x), x^3).</p>
+                    </div>
+
+                    <div class="panel-section">
+                        <label class="panel-label">
+                            <i class="fa-solid fa-arrows-left-right"></i> Intervalo de Integración
+                        </label>
+                        <div class="interval-inputs">
+                            <div class="input-group">
+                                <span class="input-prefix">a</span>
+                                <input type="number" id="valA" value="0" step="1" class="control-input">
+                            </div>
+                            <div class="input-group">
+                                <span class="input-prefix">b</span>
+                                <input type="number" id="valB" value="5" step="1" class="control-input">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel-section">
+                        <label class="panel-label">
+                            <i class="fa-solid fa-table-columns"></i> Número de Rectángulos
+                        </label>
+                        <div class="slider-display">
+                            <input type="range" id="rectangulos" min="1" max="100" value="10" class="control-slider">
+                            <div class="slider-value" id="numRectVisual">10</div>
+                        </div>
+                    </div>
+
+                    <div class="panel-section">
+                        <label class="panel-label">
+                            <i class="fa-solid fa-crosshairs"></i> Método de Evaluación
+                        </label>
+                        <select id="metodo" class="control-select">
+                            <option value="izquierda">Extremo Izquierdo</option>
+                            <option value="derecha">Extremo Derecho</option>
+                            <option value="central">Punto Medio</option>
+                        </select>
+                    </div>
+
+                    <!-- Mensaje didáctico -->
+                    <div class="didactic-message" id="mensajeDidactico"></div>
+
+                    <!-- Resultado -->
+                    <div class="result-box">
+                        <span class="result-label">Área Aproximada</span>
+                        <span class="result-value" id="resultado">0.0000 u²</span>
+                    </div>
+                </aside>
+
+                <!-- Gráfica -->
+                <div class="chart-area">
+                    <div id="grafico" style="width:100%; min-height: 520px;"></div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ============ PESTAÑA 3: DESAFÍO DE RIEMANN ============ -->
+        <section id="desafio" class="tab-content">
+            <div class="game-container">
+
+                <!-- Selector de modo de juego -->
+                <div class="game-mode-selector">
+                    <button class="game-mode-btn active" id="btnModoDesafio" onclick="cambiarModoJuego('desafio')">
+                        <i class="fa-solid fa-bullseye"></i>
+                        <span>Práctica</span>
+                    </button>
+                    <button class="game-mode-btn" id="btnModoQuiz" onclick="cambiarModoJuego('quiz')">
+                        <i class="fa-solid fa-brain"></i>
+                        <span>Quiz de Conceptos</span>
+                    </button>
+                </div>
+
+                <!-- ====== MODO DESAFÍO PROGRESIVO ====== -->
+                <div id="panelDesafio" class="game-panel">
+                    
+                    <!-- Pantalla de inicio de la práctica -->
+                    <div id="desafioInicio" class="quiz-start-screen">
+                        <div class="quiz-start-icon">
+                            <i class="fa-solid fa-bullseye"></i>
+                        </div>
+                        <h2>Práctica Interactiva</h2>
+                        <p>Pon a prueba tus conocimientos resolviendo 5 retos progresivos sobre las Sumas de Riemann. Cada reto aumenta en dificultad.</p>
+                        <button class="btn-iniciar-quiz" onclick="comenzarPractica()">
+                            <i class="fa-solid fa-play"></i> Comenzar Práctica
+                        </button>
+                    </div>
+
+                    <!-- Progreso en pasos (oculto inicialmente) -->
+                    <div id="desafioProgreso" class="desafio-progress hidden">
+                        <div class="progress-step" id="step-0"></div>
+                        <div class="progress-step" id="step-1"></div>
+                        <div class="progress-step" id="step-2"></div>
+                        <div class="progress-step" id="step-3"></div>
+                        <div class="progress-step" id="step-4"></div>
+                        <span class="progress-label" id="desafioProgressLabel">1/5</span>
+                    </div>
+
+                    <div id="desafioContenido" class="desafio-layout hidden">
+                        <!-- Card de información del Reto -->
+                        <div class="desafio-card">
+                            <div class="desafio-card-header">
+                                <div class="desafio-badge">
+                                    <i class="fa-solid fa-flag-checkered"></i>
+                                    <span>Reto <span id="desafioBadgeNum">1</span></span>
+                                </div>
+                            </div>
+                            <div class="desafio-card-body">
+                                <h3 class="desafio-titulo" id="desafioTitulo">Reto</h3>
+                                <p class="desafio-descripcion" id="desafioDescripcion">Cargando...</p>
+                                
+                                <div class="desafio-funcion-info">
+                                    <div class="info-item">
+                                        <span class="info-item-label">Función</span>
+                                        <span class="info-item-value" id="desafioFuncNombre">-</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-item-label">Intervalo [a, b]</span>
+                                        <span class="info-item-value" id="desafioIntervalo">-</span>
+                                    </div>
+                                    <div class="info-item">
+                                        <span class="info-item-label">Partición (n)</span>
+                                        <span class="info-item-value" id="desafioNumRect">-</span>
+                                    </div>
+                                </div>
+
+                                <p class="desafio-pregunta" id="desafioPregunta">Pregunta</p>
+                                
+                                <!-- Zona de respuesta dinámica (HTML inyectado por JS) -->
+                                <div id="desafioRespuestaArea"></div>
+
+                                <!-- Acciones -->
+                                <div class="desafio-actions">
+                                    <button class="btn-verificar-desafio" id="desafioVerificarBtn" onclick="verificarDesafio()">
+                                        <i class="fa-solid fa-check-circle"></i> Verificar respuesta
+                                    </button>
+                                    <button class="btn-siguiente-desafio hidden" id="desafioSiguienteBtn" onclick="siguienteDesafio()">
+                                        Siguiente <i class="fa-solid fa-arrow-right"></i>
+                                    </button>
+                                    <button class="btn-pista" onclick="mostrarPistaDesafio()">
+                                        <i class="fa-solid fa-lightbulb"></i> Obtener pista
+                                    </button>
+                                </div>
+
+                                <!-- Feedback -->
+                                <div class="desafio-feedback hidden" id="desafioFeedback"></div>
+                            </div>
+                        </div>
+
+                        <!-- Gráfico interactivo del Reto -->
+                        <div class="desafio-chart-area">
+                            <div id="graficoDesafio" style="width:100%; min-height:430px;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Pantalla final de completado -->
+                    <div id="desafioCompletado" class="desafio-completado hidden">
+                        <div class="completado-icon">
+                            <i class="fa-solid fa-trophy"></i>
+                        </div>
+                        <h2 class="completado-titulo" id="completadoTitulo">¡Excelente!</h2>
+                        <p class="completado-msg" id="completadoMsg">Felicidades por finalizar los 5 retos de Riemann.</p>
+                        
+                        <div class="completado-score">
+                            <span class="completado-score-num" id="completadoScoreNum">0</span>
+                            <span class="completado-score-total" id="completadoScoreTotal">/ 5</span>
+                        </div>
+                        
+                        <div class="completado-estrellas" id="completadoEstrellas"></div>
+                        
+                        <button class="btn-reiniciar-desafio" onclick="reiniciarDesafio()">
+                            <i class="fa-solid fa-rotate-right"></i> Jugar de nuevo
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ====== MODO QUIZ DE CONCEPTOS ====== -->
+                <div id="panelQuiz" class="game-panel hidden">
+
+                    <!-- Pantalla de inicio del quiz -->
+                    <div id="quizInicio" class="quiz-start-screen">
+                        <div class="quiz-start-icon">
+                            <i class="fa-solid fa-brain"></i>
+                        </div>
+                        <h2>Quiz de Conceptos</h2>
+                        <p>Pon a prueba tus conocimientos sobre integración y las Sumas de Riemann con este quiz interactivo de 10 preguntas.</p>
+                        <button class="btn-iniciar-quiz" onclick="iniciarQuiz()">
+                            <i class="fa-solid fa-play"></i> Comenzar Quiz
+                        </button>
+                    </div>
+
+                    <!-- Estado: Preguntas -->
+                    <div id="quizPreguntas" class="quiz-questions hidden">
+                        <div class="quiz-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="quizProgressBar" style="width: 10%"></div>
+                            </div>
+                            <span class="progress-text"><span id="quizActual">1</span>/10</span>
+                        </div>
+
+                        <div class="quiz-question-card">
+                            <h3 id="quizPreguntaTexto">Cargando pregunta...</h3>
+                            <div id="quizOpciones" class="quiz-options">
+                                <!-- Opciones inyectadas por JS -->
+                            </div>
+                            <div id="quizFeedback" class="quiz-feedback hidden">
+                                <p id="quizFeedbackTexto"></p>
+                            </div>
+                            <button id="btnSiguiente" class="btn-siguiente hidden" onclick="siguientePregunta()">
+                                Siguiente <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Estado: Resultados finales -->
+                    <div id="quizFinal" class="quiz-final hidden">
+                        <div id="confettiContainer" class="confetti-container"></div>
+                        <div class="quiz-final-card">
+                            <div class="final-icon" id="quizFinalIcon">
+                                <i class="fa-solid fa-trophy"></i>
+                            </div>
+                            <h2 id="quizFinalTitulo">¡Excelente!</h2>
+                            <p id="quizFinalMensaje">Has demostrado un gran dominio del tema.</p>
+                            <div class="final-score">
+                                <span class="score-number" id="quizFinalPuntaje">10</span>
+                                <span class="score-total">/ 10</span>
+                            </div>
+                            <div class="final-stars" id="quizFinalEstrellas"></div>
+                            <button class="btn-reiniciar-quiz" onclick="reiniciarQuiz()">
+                                <i class="fa-solid fa-rotate"></i> Intentar de nuevo
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <script src="script.js?v=2.0"></script>
+</body>
+</html>
